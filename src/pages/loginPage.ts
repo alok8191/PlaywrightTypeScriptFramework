@@ -1,7 +1,7 @@
 import { Locator, Page } from "@playwright/test";
 import { env } from "../utils/env";
 
-export class LoginPage {
+export class loginPage {
 
   private userName: Locator;
   private password: Locator;

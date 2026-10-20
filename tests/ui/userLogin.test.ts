@@ -1,20 +1,16 @@
-import { expect, customTest } from '../../src/fixtures/loginFixture';
+import { expect, test } from '../../src/fixtures/loginFixture';
+import { productPage } from '../../src/pages/productPage';
+import { cartPage } from '../../src/pages/cartPage';
 
-customTest("should login successfully with valid credentials", async ({ loginPage }) => {
-    const productName = "Sauce Labs Backpack";
+test("end to end complete order flow", async ({ uiLogin }) => {
+  const productName = "Sauce Labs Backpack";
 
-    await loginPage.locator(".inventory_item_img").first().waitFor();
-    const products = loginPage.locator(".inventory_item_description");
-    const counts = await products.count();
+  const productsPage = new productPage(uiLogin.page);
+  await productsPage.addProductToCart(productName);
 
-    for (let i = 0; i < counts; ++i) {
-      if ((await products.nth(i).locator(".inventory_item_name").textContent()) === productName) {
-        await products.nth(i).locator("text=Add to cart").click();
-        break;
-      }
-    }
-
-    await loginPage.locator(".shopping_cart_link").click();
-    await expect(loginPage.locator(".inventory_item_name").first()).toHaveText(productName);
-    await loginPage.locator("#checkout").click();
+  const cart = new cartPage(uiLogin.page);
+  await cart.goToCart();
+  await expect(cart.selectedProductName).toHaveText(productName);
+  await cart.proceedToCheckout();
+  await uiLogin.page.pause();
 });

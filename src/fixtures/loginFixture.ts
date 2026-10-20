@@ -1,17 +1,17 @@
-import { test as base, expect} from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
+import { test as base, expect } from '@playwright/test';
+import { loginPage } from '../pages/loginPage';
 import { env } from '../utils/env';
 
 type loginFixture = {
-  loginPage: LoginPage;
+  uiLogin: loginPage;
 };
 
-export const customTest = base.extend<loginFixture>({
-  loginPage: async ({ page }, use) => {
-    const loginPage = new LoginPage(page);
-    await loginPage.goTo();
-    await loginPage.login(env.username, env.password);
-    await use(loginPage);
+export const test = base.extend<loginFixture>({
+  uiLogin: async ({ page }, use) => {
+    const uiLogin = new loginPage(page);
+    await uiLogin.goTo();
+    await uiLogin.login(env.username, env.password);
+    await use(uiLogin);
   },
 });
 
